@@ -1,0 +1,12 @@
+c:/users/ccrc/documents/visual studio 2015/Projects/CoelacanthServer/CoelacanthServer/bin/Debug/CoelacanthServer.exe.config
+C:/Users/ccrc/documents/visual studio 2015/Projects/CoelacanthServer/CoelacanthServer/bin/Debug/CoelacanthServer.exe
+C:/Users/ccrc/documents/visual studio 2015/Projects/CoelacanthServer/CoelacanthServer/bin/Debug/CoelacanthServer.pdb
+C:/Users/ccrc/documents/visual studio 2015/Projects/CoelacanthServer/CoelacanthServer/obj/Debug/CoelacanthServer.csprojResolveAssemblyReference.cache
+C:/Users/ccrc/documents/visual studio 2015/Projects/CoelacanthServer/CoelacanthServer/obj/Debug/CoelacanthServer.exe
+C:/Users/ccrc/documents/visual studio 2015/Projects/CoelacanthServer/CoelacanthServer/obj/Debug/CoelacanthServer.pdb
+/Users/chogwanhee/Documents/CoelacanthServer/CoelacanthServer/bin/Debug/CoelacanthServer.exe.config
+/Users/chogwanhee/Documents/CoelacanthServer/CoelacanthServer/bin/Debug/CoelacanthServer.exe
+/Users/chogwanhee/Documents/CoelacanthServer/CoelacanthServer/bin/Debug/CoelacanthServer.pdb
+/Users/chogwanhee/Documents/CoelacanthServer/CoelacanthServer/obj/Debug/CoelacanthServer.csproj.CoreCompileInputs.cache
+/Users/chogwanhee/Documents/CoelacanthServer/CoelacanthServer/obj/Debug/CoelacanthServer.exe
+/Users/chogwanhee/Documents/CoelacanthServer/CoelacanthServer/obj/Debug/CoelacanthServer.pdb
