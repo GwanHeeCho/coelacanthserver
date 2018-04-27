@@ -15,11 +15,11 @@ namespace CoelacanthServer
         {
             Thread tcp;
             tcp = new Thread(new ThreadStart(tcpServer));
-            //tcp.Start();
+            tcp.Start();
 
             Thread udp;
             udp = new Thread(new ThreadStart(udpServer));
-            udp.Start();
+            //udp.Start();
 
             while (true)
             {

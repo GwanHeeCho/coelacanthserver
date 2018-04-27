@@ -10,3 +10,9 @@ C:/Users/ccrc/documents/visual studio 2015/Projects/CoelacanthServer/CoelacanthS
 /Users/chogwanhee/Documents/CoelacanthServer/CoelacanthServer/obj/Debug/CoelacanthServer.csproj.CoreCompileInputs.cache
 /Users/chogwanhee/Documents/CoelacanthServer/CoelacanthServer/obj/Debug/CoelacanthServer.exe
 /Users/chogwanhee/Documents/CoelacanthServer/CoelacanthServer/obj/Debug/CoelacanthServer.pdb
+/Users/revent/Documents/CoelacanthServer/CoelacanthServer/bin/Debug/CoelacanthServer.exe.config
+/Users/revent/Documents/CoelacanthServer/CoelacanthServer/bin/Debug/CoelacanthServer.exe
+/Users/revent/Documents/CoelacanthServer/CoelacanthServer/bin/Debug/CoelacanthServer.pdb
+/Users/revent/Documents/CoelacanthServer/CoelacanthServer/obj/Debug/CoelacanthServer.csproj.CoreCompileInputs.cache
+/Users/revent/Documents/CoelacanthServer/CoelacanthServer/obj/Debug/CoelacanthServer.exe
+/Users/revent/Documents/CoelacanthServer/CoelacanthServer/obj/Debug/CoelacanthServer.pdb

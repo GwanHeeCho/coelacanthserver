@@ -68,10 +68,8 @@ namespace CoelacanthServer
         }
 
         static void AcceptCallback(IAsyncResult ar)
-        {    // 클라이언트가 접속에 성공한 경우 호출되는 콜백 함수
+        {   // 클라이언트가 접속에 성공한 경우 호출되는 콜백 함수
             allDone.Set();
-            //string _addr = GetIP();
-            //Console.WriteLine(_addr);
             Socket listener = (Socket)ar.AsyncState;
             Socket handler = listener.EndAccept(ar);
             handler.NoDelay = false;
@@ -79,20 +77,6 @@ namespace CoelacanthServer
             handler.SendBufferSize = 81920;
             handler.ReceiveBufferSize = 81920;
             UserList.Add(new User(handler));
-        }
-
-        static string GetIP()
-        {   // 로컬 host IP 획득 함수
-            IPHostEntry _host = Dns.GetHostEntry(Dns.GetHostName());
-            string ipAddr = string.Empty;
-            for (int i = 0; i < _host.AddressList.Length; i++)
-            {
-                if (_host.AddressList[i].AddressFamily == AddressFamily.InterNetwork)
-                {
-                    ipAddr = _host.AddressList[i].ToString();
-                }
-            }
-            return ipAddr;
         }
     }
 }

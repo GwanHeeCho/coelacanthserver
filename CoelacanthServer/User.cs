@@ -2,10 +2,6 @@
 using System.Text;
 using System.Net.Sockets;
 using System.Net;
-using System.Diagnostics;
-using System.Threading;
-using System.Linq;
-
 namespace CoelacanthServer
 {
     class User
@@ -14,11 +10,9 @@ namespace CoelacanthServer
          * 1. 유저의 버퍼, 데이터, 소켓 정보를 저장할 클래스 변수 생성
          * 2. 정보 조회에 필요한 데이터 지정 (DB 추가되면, 따로 가져올 예정)
          * 3. 호스트와 게스트 구분 지정
-         * 4. 핵 지정
         --------------------------------------------- */
         string nick;
         UserData data = new UserData(); // 소켓, 버퍼, 데이터 길이 등을 저장할 클래스 변수를 생성한다.
-        static int _userCount = 0;
         User hostUser = null, guestUser = null;
 
         UdpClient udp = new UdpClient();
@@ -83,7 +77,7 @@ namespace CoelacanthServer
                 Server.DeleteUser(this);
                 Console.WriteLine("클라이언트 종료 신호");
                 //Console.WriteLine(nick + " 님이 종료하셨습니다.");
-                Disconnect();
+                //Disconnect();
             }
         }
 
@@ -96,12 +90,12 @@ namespace CoelacanthServer
             // Equals("START") : 호스트가 게임을 시작할 경우
             string msg = Encoding.UTF8.GetString(data.buffer, 2, length - 2);
             string[] text = msg.Split(':');
+            Console.WriteLine(msg);
             if (text[0].Equals("CONNECT"))
             {
                 nick = text[1];
-                _userCount = Server.UserList.Count;
-                Console.WriteLine("[ :: " + _userCount + "명 접속 :: ]");
-                WriteLine(string.Format("INITIALIZE:{0}", _userCount));
+                Console.WriteLine("[ :: " + Server.UserList.Count + "명 접속 :: ]");
+                WriteLine(string.Format("INITIALIZE:{0}", Server.UserList.Count));
 
 
 
@@ -137,6 +131,7 @@ namespace CoelacanthServer
             }
             else if (text[0].Equals("POSITION"))
             {
+                WriteLine(string.Format("POSITION:{0}:{1}:{2}:{3}", text[1], text[2], text[3], text[4]));
                 //dgram = Encoding.ASCII.GetBytes(text[1]);
                 //byte[] bStrByte = Encoding.UTF8.GetBytes(str0);
                 // string str1 = Encoding.Default.GetString(bStrByte); // byte -> string
@@ -145,8 +140,6 @@ namespace CoelacanthServer
                 //byte[] _position = Encoding.UTF8.GetBytes(text[1]);
 
                 //MulticastWrite(string.Format("POSITION:{0}", text[1]));
-                Console.WriteLine(msg);
-                WriteLine(string.Format("POSITION:{0}:{1}:{2}:{3}", text[1], text[2], text[3], text[4]));
             }
         }
 
@@ -184,31 +177,44 @@ namespace CoelacanthServer
 
         public void WriteLine(string text)
         {
-            try
+            byte[] buff = new byte[4096];
+            Buffer.BlockCopy(ShortToByte(Encoding.UTF8.GetBytes(text).Length + 2), 0, buff, 0, 2);
+            Buffer.BlockCopy(Encoding.UTF8.GetBytes(text), 0, buff, 2, Encoding.UTF8.GetBytes(text).Length);
+            data.workSocket.Send(buff, Encoding.UTF8.GetBytes(text).Length + 2, 0);
+            /*
+            for (int i = Server.UserList.Count - 1; i >= 0; i--)
             {
-                // 서버에 패킷 정보를 보낸다.
+                // 본인의 클라이언트가 서버와 연결 되어있는지 확
                 if (data.workSocket != null && data.workSocket.Connected)
-                {
+                {   // 서버에 패킷 정보를 보낸다.
                     byte[] buff = new byte[4096];
                     // 1. 문자열의 2바이트를 버퍼에 넣는다.
                     // 2. 문자열을 byte로 형변환해서 버퍼에 추가한다.
                     // 3. 문자열 크기와 2바이트 정보를 소켓으로 전송한다.
-                    Buffer.BlockCopy(ShortToByte(Encoding.UTF8.GetBytes(text).Length + 2), 0, buff, 0, 2);
-                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(text), 0, buff, 2, Encoding.UTF8.GetBytes(text).Length);
-                    data.workSocket.Send(buff, Encoding.UTF8.GetBytes(text).Length + 2, 0);
+                    Socket client = Server.UserList[i].data.workSocket;
+                    if (client != null && client.Connected)
+                    {
+                        try
+                        {
+                            Buffer.BlockCopy(ShortToByte(Encoding.UTF8.GetBytes(text).Length + 2), 0, buff, 0, 2);
+                            Buffer.BlockCopy(Encoding.UTF8.GetBytes(text), 0, buff, 2, Encoding.UTF8.GetBytes(text).Length);
+                            data.workSocket.Send(buff, Encoding.UTF8.GetBytes(text).Length + 2, 0);
+                        }
+
+                        catch (System.Exception ex)
+                        {
+                            Disconnect();
+                            Console.WriteLine("WriteLine Error : " + ex.Message);
+                            // 1. 접속이 원활하지 않을 경우, 소켓을 닫는다.
+                            data.workSocket.Shutdown(SocketShutdown.Both);
+                            data.workSocket.Close();
+
+                            Server.DeleteUser(this);
+                        }
+                    }
                 }
             }
-
-            catch (System.Exception ex)
-            {
-                Disconnect();
-                Console.WriteLine("WriteLine Error : " + ex.Message);
-                // 1. 접속이 원활하지 않을 경우, 소켓을 닫는다.
-                data.workSocket.Shutdown(SocketShutdown.Both);
-                data.workSocket.Close();
-
-                Server.DeleteUser(this);
-            }
+            */
         }
 
         public void DeadReckoning(ref int x, ref int y, ref int z)
