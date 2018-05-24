@@ -16,3 +16,9 @@ C:/Users/ccrc/documents/visual studio 2015/Projects/CoelacanthServer/CoelacanthS
 /Users/revent/Documents/CoelacanthServer/CoelacanthServer/obj/Debug/CoelacanthServer.csproj.CoreCompileInputs.cache
 /Users/revent/Documents/CoelacanthServer/CoelacanthServer/obj/Debug/CoelacanthServer.exe
 /Users/revent/Documents/CoelacanthServer/CoelacanthServer/obj/Debug/CoelacanthServer.pdb
+C:\Users\ccrc\Documents\Project Files\CoelacanthServer\CoelacanthServer\bin\Debug\CoelacanthServer.exe.config
+C:\Users\ccrc\Documents\Project Files\CoelacanthServer\CoelacanthServer\obj\Debug\CoelacanthServer.exe
+C:\Users\ccrc\Documents\Project Files\CoelacanthServer\CoelacanthServer\obj\Debug\CoelacanthServer.pdb
+C:\Users\ccrc\Documents\Project Files\CoelacanthServer\CoelacanthServer\bin\Debug\CoelacanthServer.exe
+C:\Users\ccrc\Documents\Project Files\CoelacanthServer\CoelacanthServer\bin\Debug\CoelacanthServer.pdb
+C:\Users\ccrc\Documents\Project Files\CoelacanthServer\CoelacanthServer\obj\Debug\CoelacanthServer.csprojResolveAssemblyReference.cache

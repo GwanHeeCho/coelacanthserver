@@ -19,12 +19,17 @@ namespace CoelacanthServer
         IPEndPoint multicastEP = new IPEndPoint(IPAddress.Parse("229.1.1.229"), 2020);
         public User(Socket socket)
         {
-            
             data.workSocket = socket; // UserData의 workSocket를 서버에 연결된 소켓으로 설정한다.
             // 비동기 소켓 리시브를 실행한다. 클라이언트에서 데이터가 도착하면 ReadCallback이 자동으로 호출된다.
             data.workSocket.BeginReceive(data.buffer, data.recvlen, UserData.BufferSize, 0, new AsyncCallback(ReadCallback), data);
-            WriteLine("CONNECT"); // 유저가 접속했을때 곧바로 클라이언트로 보내지는 패킷
-
+            try
+            {
+                WriteLine("CONNECT"); // 유저가 접속했을때 곧바로 클라이언트로 보내지는 패킷
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
         /* ---------------------------------------------
          * 유저가 소켓에 접속하면서 대리자 비동기 작업을 시작한다.
@@ -75,7 +80,7 @@ namespace CoelacanthServer
             catch (Exception)
             {
                 Server.DeleteUser(this);
-                Console.WriteLine("클라이언트 종료 신호");
+                Console.WriteLine("Client Disconnected");
                 //Console.WriteLine(nick + " 님이 종료하셨습니다.");
                 //Disconnect();
             }
