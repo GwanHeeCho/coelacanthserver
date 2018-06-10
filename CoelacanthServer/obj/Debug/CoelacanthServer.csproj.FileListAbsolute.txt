@@ -22,3 +22,9 @@ C:\Users\ccrc\Documents\Project Files\CoelacanthServer\CoelacanthServer\obj\Debu
 C:\Users\ccrc\Documents\Project Files\CoelacanthServer\CoelacanthServer\bin\Debug\CoelacanthServer.exe
 C:\Users\ccrc\Documents\Project Files\CoelacanthServer\CoelacanthServer\bin\Debug\CoelacanthServer.pdb
 C:\Users\ccrc\Documents\Project Files\CoelacanthServer\CoelacanthServer\obj\Debug\CoelacanthServer.csprojResolveAssemblyReference.cache
+D:\Project Files\CoelacanthServer\CoelacanthServer\bin\Debug\CoelacanthServer.exe.config
+D:\Project Files\CoelacanthServer\CoelacanthServer\bin\Debug\CoelacanthServer.exe
+D:\Project Files\CoelacanthServer\CoelacanthServer\bin\Debug\CoelacanthServer.pdb
+D:\Project Files\CoelacanthServer\CoelacanthServer\obj\Debug\CoelacanthServer.csprojResolveAssemblyReference.cache
+D:\Project Files\CoelacanthServer\CoelacanthServer\obj\Debug\CoelacanthServer.exe
+D:\Project Files\CoelacanthServer\CoelacanthServer\obj\Debug\CoelacanthServer.pdb
