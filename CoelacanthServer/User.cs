@@ -129,6 +129,11 @@ namespace CoelacanthServer
                 Console.WriteLine("위치초기화");
                 WriteLine(string.Format("GOOD"));
             }
+            else if(text[0].Equals("NICKNAME"))
+            {
+                Console.WriteLine("유저닉네임");
+                WriteLine(string.Format("NICKNAME:{0}", text[1]));
+            }
             else if (text[0].Equals("POSITION"))
             {
                 WriteLine(string.Format("POSITION:{0}:{1}:{2}:{3}", text[1], text[2], text[3], text[4]));
