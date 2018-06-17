@@ -134,6 +134,16 @@ namespace CoelacanthServer
                 Console.WriteLine("유저닉네임");
                 WriteLine(string.Format("NICKNAME:{0}", text[1]));
             }
+            else if(text[0].Equals("NICKERROR"))
+            {
+            }
+            else if(text[0].Equals("WEAPONCHANGE"))
+            {
+                //Console.WriteLine("무기교체:{0}:{1}", text[1], text[2]);
+            }
+            else if(text[0].Equals("FALL"))
+            {
+            }
             else if (text[0].Equals("POSITION"))
             {
                 WriteLine(string.Format("POSITION:{0}:{1}:{2}:{3}", text[1], text[2], text[3], text[4]));
