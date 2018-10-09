@@ -30,13 +30,13 @@ namespace CoelacanthServer
         public static void tcpServer()
         {
             // TCP 서버 접속
-            Server StartServer = new Server(2020); 
+            Server StartServer = new Server(12800); 
         }
 
         public static void udpServer()
         {
             // UDP 서버 접속
-            MulticastServer server = new MulticastServer(4040);
+            MulticastServer server = new MulticastServer(12900);
         }
     }
 }

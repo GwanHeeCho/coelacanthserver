@@ -18,6 +18,7 @@ namespace CoelacanthServer
         // 2. 스레드 충돌을 막기 위해 사용할 멀티스레스 시그널 생성
         // 3. 클라이언트들에게 패킷을 전송할 멀티캐스트 서버 생성
         public static List<User> UserList = new List<User>();
+        public static Random randomRoomNumber = new Random();
         public static ManualResetEvent allDone = new ManualResetEvent(false);
         public Server(int port)
         {   // 127.0.0.1 -p 2020

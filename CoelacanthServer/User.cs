@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Net.Sockets;
 using System.Net;
@@ -11,12 +12,18 @@ namespace CoelacanthServer
          * 2. 정보 조회에 필요한 데이터 지정 (DB 추가되면, 따로 가져올 예정)
          * 3. 호스트와 게스트 구분 지정
         --------------------------------------------- */
-        string nick;
+        string nickname;
         UserData data = new UserData(); // 소켓, 버퍼, 데이터 길이 등을 저장할 클래스 변수를 생성한다.
-        User hostUser = null, guestUser = null;
+        User hostUser = null;        
+        User[] guestUser = new User[3];
+        List<User> Room = new List<User>();
+
+        bool _ready = false;
+        bool _start = false;
+        int max = 0;
 
         UdpClient udp = new UdpClient();
-        IPEndPoint multicastEP = new IPEndPoint(IPAddress.Parse("229.1.1.229"), 2020);
+        IPEndPoint multicastEP = new IPEndPoint(IPAddress.Parse("229.1.1.229"), 12900);
         public User(Socket socket)
         {
             
@@ -41,7 +48,8 @@ namespace CoelacanthServer
                 Socket handler = data.workSocket;
                 int bytesRead = handler.EndReceive(ar);
 
-                if (bytesRead > 0) {
+                if (bytesRead > 0)
+                {
                     data.recvlen += bytesRead;
                     while (true)
                     {
@@ -53,21 +61,25 @@ namespace CoelacanthServer
                             ParsePacket(length);
                             data.recvlen -= length;
 
-                            if (data.recvlen > 0) {
+                            if (data.recvlen > 0)
+                            {
                                 Buffer.BlockCopy(data.buffer, length, data.buffer, 0, data.recvlen);
                             }
-                            else {
+                            else
+                            {
                                 handler.BeginReceive(data.buffer, data.recvlen, UserData.BufferSize, 0, new AsyncCallback(ReadCallback), data);
                                 break;
                             }
                         }
-                        else {
+                        else
+                        {
                             handler.BeginReceive(data.buffer, data.recvlen, UserData.BufferSize, 0, new AsyncCallback(ReadCallback), data);
                             break;
                         }
                     }
                 }
-                else {
+                else
+                {
                     handler.BeginReceive(data.buffer, data.recvlen, UserData.BufferSize, 0, new AsyncCallback(ReadCallback), data);
                 }
             }
@@ -75,78 +87,100 @@ namespace CoelacanthServer
             catch (Exception)
             {
                 Server.DeleteUser(this);
-                Console.WriteLine("클라이언트 종료 신호");
                 //Console.WriteLine(nick + " 님이 종료하셨습니다.");
                 //Disconnect();
             }
         }
 
+        private static string PrivateCharKey(Random _random, int _length, string _pool)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < _length; i++)
+                sb.Append(_pool[(int)(_random.NextDouble() * _pool.Length)]);
+            return sb.ToString();
+        }
+
+        // 룸의 정보를 구분할 수 있는 PK 값 생성하는 함수
+        private static string PrivateCharKey(Random _random, int _length)
+        {
+            string charPool = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+            return PrivateCharKey(_random, _length, charPool);
+        }
+
         private void ParsePacket(int length)
         {
-            // 192.168.0.2:2020
-            // Equals("CONNECT") : 클라이언트가 서버에 접속할 경우
-            // Equals("DISCONNECT") : 클라이언트가 접속을 끊었을 경우
-            // Equals("READY") : 모든 인원이 게임 준비를 했을 경우
-            // Equals("START") : 호스트가 게임을 시작할 경우
             string msg = Encoding.UTF8.GetString(data.buffer, 2, length - 2);
             string[] text = msg.Split(':');
-            Console.WriteLine(msg);
+
             if (text[0].Equals("CONNECT"))
             {
-                nick = text[1];
-                Console.WriteLine("[ :: " + Server.UserList.Count + "명 접속 :: ]");
-                WriteLine(string.Format("INITIALIZE:{0}", Server.UserList.Count));
-
-
-
-                Console.WriteLine("클라이언트 초기화 진행");
-                /* [ 2018-04-08 ]
-                 * 클라이언트에 인원 3명 충족되면 게임 시작을 위한 초기 데이터 전송 구현해놓을 것
-                 * 1. 3명일 경우, 더 이상 난입 불가능
-                 * 2. 게임 준비를 위한 대기시간과 초기 데이터를 전송
-                */
-            }
-            else if (text[0].Equals("DISCONNECT"))
-            {
-                if (nick.Length > 0)
-                {
-                }
-                data.workSocket.Shutdown(SocketShutdown.Both);
-                data.workSocket.Close();
+                //WriteLine(string.Format("INITIALIZE:{0}", Server.UserList.Count));
             }
             else if (text[0].Equals("INITIALIZE"))
             {
-                Console.WriteLine("초기화 완료");
-                WriteLine(string.Format("INITIALIZE:{0}", true));
+                Console.WriteLine("[ :: 현재 접속중인 인원 : " + Server.UserList.Count + " :: ]");
+                max = Convert.ToInt32(Server.UserList.Count);
+                if (Server.UserList.Count == 1)
+                {
+                    for (int i = 0; i < Server.UserList.Count; i++)
+                    {
+                        if (Server.UserList[i] != this)
+                            if (Server.UserList[i].hostUser != null)
+                                if (Server.UserList[i].guestUser[i] == null)
+                                    Room.Add(Server.UserList[i]);
+                    }
+
+                    if (Room.Count <= 0)
+                    {
+                        hostUser = this;
+                        guestUser = null;
+                        var RoomID = PrivateCharKey(Server.randomRoomNumber, 20);
+                        WriteLine(string.Format("CREATEROOM:{0}", RoomID));
+                    }
+
+                    WriteLine(string.Format("HOST:{0}", 1));
+                    Console.WriteLine("호스트유저");
+                }
+                else
+                {
+                    Console.WriteLine("게스트유저");
+                }
+                nickname = text[1];
             }
-            else if (text[0].Equals("GAMESTART"))
-            {                
-                Console.WriteLine("데이터 설정 완료");
-                WriteLine(string.Format("POSITION"));
-            }
-            else if (text[0].Equals("GOOD"))
+            else if (text[0].Equals("READY")) // 클라이언트가 GUEST나 HOST 패킷을 받고 READY를 송신한 경우
             {
-                Console.WriteLine("위치초기화");
-                WriteLine(string.Format("GOOD"));
-            }
-            else if(text[0].Equals("NICKNAME"))
-            {
-                Console.WriteLine("유저닉네임");
-                WriteLine(string.Format("NICKNAME:{0}", text[1]));
-            }
-            else if(text[0].Equals("NICKERROR"))
-            {
-            }
-            else if(text[0].Equals("WEAPONCHANGE"))
-            {
-                //Console.WriteLine("무기교체:{0}:{1}", text[1], text[2]);
-            }
-            else if(text[0].Equals("FALL"))
-            {
+                _ready = true;
+                Console.WriteLine(nickname + " is ready");
+
+                if (hostUser != null && guestUser != null) // 호스트와 게스트가 모두 있는 경우면
+                {
+                    if (hostUser._ready && guestUser[0]._ready) // 임시 2인용 테스트
+                    {
+                        hostUser._start = true;
+                        // 1. 캐릭터 4종류 중 한가지 할당
+                        // 2. 맵 랜덤 할당 (호스트와 게스트 매칭)
+                        // 3-1. 게스트의 캐릭터를 호스트와 다르게 설정
+                        // 3-2. 게스트들의 캐릭터가 중복되지 않도록 설정
+                        // 1번째 게스트 : userlist.hostUser.charracternumber != number ? number : number;
+                        // 2~3번째 게스트 : get.hostuser.characternumber && get.guestuser.characeternumber != number;
+                        
+                        // 모든 유저에게 게임 시작 패킷 전송
+                        //hostUser.WriteLine(string.Format("GAMESTART:{0}", characterNumber));
+                        //guestUser[Convert.ToInt32(text[1])].WriteLine(string.Format("GAMESTART{0}", characterNumber));
+
+                        Console.WriteLine("game start");
+                    }
+                }
             }
             else if (text[0].Equals("POSITION"))
             {
                 WriteLine(string.Format("POSITION:{0}:{1}:{2}:{3}", text[1], text[2], text[3], text[4]));
+                // 좌표 받아오기
+                int x = int.Parse(text[1]);
+                int y = int.Parse(text[2]);
+                int z = int.Parse(text[3]);
+
+                hostUser.WriteLine(string.Format("POSITION:{0}:{1}:{2}", x, y, z));
                 //dgram = Encoding.ASCII.GetBytes(text[1]);
                 //byte[] bStrByte = Encoding.UTF8.GetBytes(str0);
                 // string str1 = Encoding.Default.GetString(bStrByte); // byte -> string
@@ -155,6 +189,14 @@ namespace CoelacanthServer
                 //byte[] _position = Encoding.UTF8.GetBytes(text[1]);
 
                 //MulticastWrite(string.Format("POSITION:{0}", text[1]));
+            }
+            else if (text[0].Equals("DISCONNECT"))
+            {
+                if (nickname.Length > 0)
+                {
+                }
+                data.workSocket.Shutdown(SocketShutdown.Both);
+                data.workSocket.Close();
             }
         }
 
@@ -192,6 +234,8 @@ namespace CoelacanthServer
 
         public void WriteLine(string text)
         {
+            // 호스트 종료 시에도 서버가 돌아가야 함
+            // 룸 3개 기준, 12인 플레이를 위해 호스트를 받을 서버임으로 꺼지지 않게 설정
             byte[] buff = new byte[4096];
             Buffer.BlockCopy(ShortToByte(Encoding.UTF8.GetBytes(text).Length + 2), 0, buff, 0, 2);
             Buffer.BlockCopy(Encoding.UTF8.GetBytes(text), 0, buff, 2, Encoding.UTF8.GetBytes(text).Length);
@@ -266,7 +310,7 @@ namespace CoelacanthServer
         public static void udpServer()
         {
             // UDP 서버 접속
-            MulticastServer server = new MulticastServer(4040);
+            MulticastServer server = new MulticastServer(12900);
         }
 
         void Disconnect()
@@ -274,25 +318,31 @@ namespace CoelacanthServer
             // 호스트와 게스트 클라이언트 구분을 위해 설정
             // 1. 호스트가 남아있을 경우, 룸 유지집
             // 2. 호스트가 종료했을 경우, 룸 제거
-            if (nick.Length > 0)
+            if (nickname.Length > 0)
             {
                 if (hostUser != null || guestUser != null)
                 {
                     // 내가 방에 입장했을 경우,
-                    if (hostUser != this) // hostUser가 다른 사람이면 게스트로 입장한 상태
+                    if (hostUser != this) 
                     {
-                        hostUser.WriteLine("OUT"); // 게스트가 나감
-                        hostUser.guestUser = null; // 다른 유저가 접속할 수 있도록 초기화
+                        hostUser.WriteLine("OUT");
+                        hostUser.guestUser = null;
+                        //hostUser.ready = false;
+                        //hostUser.start = false;
                     }
                     // 내가 호스트일 경우,
                     else
                     {
                         if (guestUser != null)
                         {
-                            // 게스트 퇴장을 서버에 알림
-                            guestUser.WriteLine("OUT");
-                            guestUser.hostUser = this;
-                            guestUser.guestUser = null;
+                            // 1. 호스트 유저 나간걸 알림
+                            // 2. 게스트 유저 중, 프록시서버 운용 가능한 유저로 이전
+                            // 3. 게스트 유저 초기화 진행
+                            //guestUser.WriteLine("OUT"); // 호스트 유저 종료
+                            //guestUser.hostUser = this; // 호스트 이전
+                            //guestUser.guestUser = null; // 게스트는 초기화한다.
+                            //guestUser.ready = false;
+                            //guestUser.start = false;
                         }
                     }
                 }
