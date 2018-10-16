@@ -13,6 +13,10 @@ namespace CoelacanthServer
          * 3. 호스트와 게스트 구분 지정
         --------------------------------------------- */
         string nickname;
+        int id;
+        bool ready;
+        string weapon;
+
         UserData data = new UserData(); // 소켓, 버퍼, 데이터 길이 등을 저장할 클래스 변수를 생성한다.
         User hostUser = null;        
         User[] guestUser = new User[3];
@@ -111,10 +115,10 @@ namespace CoelacanthServer
         {
             string msg = Encoding.UTF8.GetString(data.buffer, 2, length - 2);
             string[] text = msg.Split(':');
+            Console.WriteLine("받은 메시지 : " + msg);
 
             if (text[0].Equals("CONNECT"))
             {
-                //WriteLine(string.Format("INITIALIZE:{0}", Server.UserList.Count));
             }
             else if (text[0].Equals("INITIALIZE"))
             {
@@ -132,6 +136,7 @@ namespace CoelacanthServer
 
                     if (Room.Count <= 0)
                     {
+                        Console.WriteLine("룸 생성");
                         hostUser = this;
                         guestUser = null;
                         var RoomID = PrivateCharKey(Server.randomRoomNumber, 20);
@@ -140,12 +145,16 @@ namespace CoelacanthServer
 
                     WriteLine(string.Format("HOST:{0}", 1));
                     Console.WriteLine("호스트유저");
+                    hostUser.nickname = text[1];
+                    hostUser.id = int.Parse(text[2]);
                 }
                 else
                 {
+                    //guestUser[Server.UserList.Count - 1].nickname = text[1];
+                    //guestUser[Server.UserList.Count - 1].id = int.Parse(text[2]);
                     Console.WriteLine("게스트유저");
                 }
-                nickname = text[1];
+                //nickname = text[1];
             }
             else if (text[0].Equals("READY")) // 클라이언트가 GUEST나 HOST 패킷을 받고 READY를 송신한 경우
             {
@@ -171,6 +180,9 @@ namespace CoelacanthServer
                         Console.WriteLine("game start");
                     }
                 }
+            }
+            else if(text[0].Equals("RECOVERY"))
+            {
             }
             else if (text[0].Equals("POSITION"))
             {
@@ -315,6 +327,7 @@ namespace CoelacanthServer
 
         void Disconnect()
         {
+            Console.WriteLine("[ :: 현재 접속중인 인원 : " + Server.UserList.Count + " :: ]");
             // 호스트와 게스트 클라이언트 구분을 위해 설정
             // 1. 호스트가 남아있을 경우, 룸 유지집
             // 2. 호스트가 종료했을 경우, 룸 제거
