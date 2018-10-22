@@ -16,6 +16,8 @@ namespace CoelacanthServer
         int id;
         bool ready;
         string weapon;
+        int userCount = 0;
+        bool hostCount = false;
 
         UserData data = new UserData(); // 소켓, 버퍼, 데이터 길이 등을 저장할 클래스 변수를 생성한다.
         User hostUser = null;        
@@ -113,20 +115,23 @@ namespace CoelacanthServer
 
         private void ParsePacket(int length)
         {
+            string time = DateTime.Now.ToString("[yyyy-MM-dd HH:mm:ss]");
             string msg = Encoding.UTF8.GetString(data.buffer, 2, length - 2);
-            string[] text = msg.Split(':');
-            Console.WriteLine("받은 메시지 : " + msg);
+            string[] text = msg.Split(':');            
+            Console.WriteLine(time + " 받은 메시지 : " + msg);
 
             if (text[0].Equals("CONNECT"))
             {
             }
             else if (text[0].Equals("INITIALIZE"))
             {
-                Console.WriteLine("[ :: 현재 접속중인 인원 : " + Server.UserList.Count + " :: ]");
-                max = Convert.ToInt32(Server.UserList.Count);
-                if (Server.UserList.Count == 1)
+                userCount++;
+                Console.WriteLine("userCount : " + userCount);
+                Console.WriteLine("[ :: 현재 접속중인 인원 : " + userCount + " :: ]");
+                max = Convert.ToInt32(userCount);
+                if (userCount == 1)
                 {
-                    for (int i = 0; i < Server.UserList.Count; i++)
+                    for (int i = 0; i < userCount; i++)
                     {
                         if (Server.UserList[i] != this)
                             if (Server.UserList[i].hostUser != null)
@@ -140,11 +145,11 @@ namespace CoelacanthServer
                         hostUser = this;
                         guestUser = null;
                         var RoomID = PrivateCharKey(Server.randomRoomNumber, 20);
+                        // 확인용
+                        Console.WriteLine(time + " 받은 메시지 : " + RoomID);
                         WriteLine(string.Format("CREATEROOM:{0}", RoomID));
                     }
-
-                    WriteLine(string.Format("HOST:{0}", 1));
-                    Console.WriteLine("호스트유저");
+                    Console.WriteLine(time + " 호스트유저 지정"); 
                     hostUser.nickname = text[1];
                     hostUser.id = int.Parse(text[2]);
                 }
@@ -204,6 +209,8 @@ namespace CoelacanthServer
             }
             else if (text[0].Equals("DISCONNECT"))
             {
+                userCount--;
+                Console.WriteLine("userCount : " + userCount);
                 if (nickname.Length > 0)
                 {
                 }
@@ -327,7 +334,7 @@ namespace CoelacanthServer
 
         void Disconnect()
         {
-            Console.WriteLine("[ :: 현재 접속중인 인원 : " + Server.UserList.Count + " :: ]");
+            Console.WriteLine("누가 나감");
             // 호스트와 게스트 클라이언트 구분을 위해 설정
             // 1. 호스트가 남아있을 경우, 룸 유지집
             // 2. 호스트가 종료했을 경우, 룸 제거
