@@ -16,8 +16,6 @@ namespace CoelacanthServer
         int id;
         bool ready;
         string weapon;
-        int userCount = 0;
-        bool hostCount = false;
 
         UserData data = new UserData(); // 소켓, 버퍼, 데이터 길이 등을 저장할 클래스 변수를 생성한다.
         User hostUser = null;        
@@ -125,13 +123,11 @@ namespace CoelacanthServer
             }
             else if (text[0].Equals("INITIALIZE"))
             {
-                userCount++;
-                Console.WriteLine("userCount : " + userCount);
-                Console.WriteLine("[ :: 현재 접속중인 인원 : " + userCount + " :: ]");
-                max = Convert.ToInt32(userCount);
-                if (userCount == 1)
+                Console.WriteLine("[ :: 현재 접속중인 인원 : " + Server.UserList.Count + " :: ]");
+                max = Convert.ToInt32(Server.UserList.Count);
+                if (Server.UserList.Count % 4 == 1)
                 {
-                    for (int i = 0; i < userCount; i++)
+                    for (int i = 0; i < Server.UserList.Count; i++)
                     {
                         if (Server.UserList[i] != this)
                             if (Server.UserList[i].hostUser != null)
@@ -152,6 +148,8 @@ namespace CoelacanthServer
                     Console.WriteLine(time + " 호스트유저 지정"); 
                     hostUser.nickname = text[1];
                     hostUser.id = int.Parse(text[2]);
+                    hostUser.ready = false;
+                    hostUser.weapon = null;
                 }
                 else
                 {
@@ -164,7 +162,6 @@ namespace CoelacanthServer
             else if (text[0].Equals("READY")) // 클라이언트가 GUEST나 HOST 패킷을 받고 READY를 송신한 경우
             {
                 _ready = true;
-                Console.WriteLine(nickname + " is ready");
 
                 if (hostUser != null && guestUser != null) // 호스트와 게스트가 모두 있는 경우면
                 {
@@ -209,8 +206,6 @@ namespace CoelacanthServer
             }
             else if (text[0].Equals("DISCONNECT"))
             {
-                userCount--;
-                Console.WriteLine("userCount : " + userCount);
                 if (nickname.Length > 0)
                 {
                 }
