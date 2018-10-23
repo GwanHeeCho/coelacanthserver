@@ -183,6 +183,27 @@ namespace CoelacanthServer
                     }
                 }
             }
+            else if (text[0].Equals("MOVE"))
+            {
+                if (hostUser.nickname != null)
+                {
+                    if (Server.UserList.Count % 4 == 1)
+                    {
+                        int from = int.Parse(text[1]);
+                        int to = int.Parse(text[2]);
+
+                        hostUser.WriteLine(string.Format("MOVE:{0}:{1}", from, to));
+                        for (int i = 0; i < Server.UserList.Count; i++)
+                            guestUser[i].WriteLine(string.Format("MOVE:{0}:{1}", from, to));
+
+                        Console.WriteLine(string.Format("{0} moved player {1} to {2}", nickname, from, to));
+                    }
+                    else
+                    {
+                        Console.WriteLine("예외처리 " + nickname);
+                    }
+                }
+            }
             else if(text[0].Equals("RECOVERY"))
             {
             }
