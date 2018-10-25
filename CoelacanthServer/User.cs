@@ -16,6 +16,7 @@ namespace CoelacanthServer
         int id;
         bool ready;
         string weapon;
+        string privateRoomCode;
 
         UserData data = new UserData(); // 소켓, 버퍼, 데이터 길이 등을 저장할 클래스 변수를 생성한다.
         User hostUser = null;        
@@ -140,22 +141,17 @@ namespace CoelacanthServer
                         Console.WriteLine("룸 생성");
                         hostUser = this;
                         guestUser = null;
-                        var RoomID = PrivateCharKey(Server.randomRoomNumber, 20);
-                        // 확인용
-                        Console.WriteLine(time + " 받은 메시지 : " + RoomID);
-                        WriteLine(string.Format("CREATEROOM:{0}", RoomID));
                     }
                     Console.WriteLine(time + " 호스트유저 지정"); 
                     hostUser.nickname = text[1];
                     hostUser.id = int.Parse(text[2]);
                     hostUser.ready = false;
                     hostUser.weapon = null;
-                }
-                else
-                {
-                    //guestUser[Server.UserList.Count - 1].nickname = text[1];
-                    //guestUser[Server.UserList.Count - 1].id = int.Parse(text[2]);
-                    Console.WriteLine("게스트유저");
+                    var RoomID = PrivateCharKey(Server.randomRoomNumber, 20);
+                    privateRoomCode = RoomID;   // 임시사용
+                    // 확인용
+                    Console.WriteLine(time + " 받은 메시지 : " + privateRoomCode);
+                    WriteLine(string.Format("CREATEROOM:{0}:{1}:{2}:{3}", privateRoomCode, hostUser.nickname, hostUser.id, 0));
                 }
                 //nickname = text[1];
             }
@@ -230,6 +226,7 @@ namespace CoelacanthServer
                 if (nickname.Length > 0)
                 {
                 }
+                Server.DeleteUser(this);
                 data.workSocket.Shutdown(SocketShutdown.Both);
                 data.workSocket.Close();
             }
@@ -257,7 +254,7 @@ namespace CoelacanthServer
 
             catch (System.Exception ex)
             {
-                Disconnect();
+                //Disconnect();
                 Console.WriteLine("WriteLine Error : " + ex.Message);
                 // 1. 접속이 원활하지 않을 경우, 소켓을 닫는다.
                 data.workSocket.Shutdown(SocketShutdown.Both);
