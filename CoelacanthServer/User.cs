@@ -92,6 +92,7 @@ namespace CoelacanthServer
             catch (Exception)
             {
                 Server.DeleteUser(this);
+                Console.WriteLine("[ :: 현재 접속중인 인원 : " + Server.UserList.Count + " :: ]");
                 //Console.WriteLine(nick + " 님이 종료하셨습니다.");
                 //Disconnect();
             }
@@ -157,6 +158,7 @@ namespace CoelacanthServer
             }
             else if (text[0].Equals("READY")) // 클라이언트가 GUEST나 HOST 패킷을 받고 READY를 송신한 경우
             {
+                Console.WriteLine(text[1] + ":" + text[2] + "USER READY");
                 _ready = true;
 
                 if (hostUser != null && guestUser != null) // 호스트와 게스트가 모두 있는 경우면
@@ -178,6 +180,10 @@ namespace CoelacanthServer
                         Console.WriteLine("game start");
                     }
                 }
+            }
+            else if (text[0].Equals("START"))
+            {
+                
             }
             else if (text[0].Equals("MOVE"))
             {
@@ -261,6 +267,7 @@ namespace CoelacanthServer
                 data.workSocket.Close();
 
                 Server.DeleteUser(this);
+                Console.WriteLine("[ :: 현재 접속중인 인원 : " + Server.UserList.Count + " :: ]");
             }
         }
 

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\Hanga\.Rider2018.2\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Hanga\.Rider2018.2\system\resharper-host\local\Transient\ReSharperHost\v182\SolutionCaches\_CoelacanthServer.976147856.00" t="ExcludeRecursive" />
+    <e p="D:\Program Files\Develop\CoelacanthServer" t="IncludeFlat">
+      <e p="CoelacanthServer" t="IncludeRecursive">
+        <e p="App.config" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="CoelacanthServer.csproj" t="IncludeRecursive" />
+        <e p="Error.cs" t="Include" />
+        <e p="MulticastServer.cs" t="Include" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="AssemblyInfo.cs" t="Include" />
+        </e>
+        <e p="ReceivePacket.cs" t="Include" />
+        <e p="Server.cs" t="Include" />
+        <e p="StartListening.cs" t="Include" />
+        <e p="User.cs" t="Include" />
+        <e p="UserData.cs" t="Include" />
+        <e p="Util.cs" t="Include" />
+      </e>
+      <e p="CoelacanthServer.sln" t="IncludeFlat" />
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>
