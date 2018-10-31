@@ -35,3 +35,10 @@ D:\Program Files\Develop\CoelacanthServer\CoelacanthServer\obj\Debug\CoelacanthS
 D:\Program Files\Develop\CoelacanthServer\CoelacanthServer\bin\Debug\CoelacanthServer.exe.config
 D:\Program Files\Develop\CoelacanthServer\CoelacanthServer\bin\Debug\CoelacanthServer.exe
 D:\Program Files\Develop\CoelacanthServer\CoelacanthServer\bin\Debug\CoelacanthServer.pdb
+C:\Users\user\Documents\Develop\CoelacanthServer\CoelacanthServer\bin\Debug\CoelacanthServer.exe.config
+C:\Users\user\Documents\Develop\CoelacanthServer\CoelacanthServer\bin\Debug\CoelacanthServer.exe
+C:\Users\user\Documents\Develop\CoelacanthServer\CoelacanthServer\bin\Debug\CoelacanthServer.pdb
+C:\Users\user\Documents\Develop\CoelacanthServer\CoelacanthServer\obj\Debug\CoelacanthServer.csprojAssemblyReference.cache
+C:\Users\user\Documents\Develop\CoelacanthServer\CoelacanthServer\obj\Debug\CoelacanthServer.csproj.CoreCompileInputs.cache
+C:\Users\user\Documents\Develop\CoelacanthServer\CoelacanthServer\obj\Debug\CoelacanthServer.exe
+C:\Users\user\Documents\Develop\CoelacanthServer\CoelacanthServer\obj\Debug\CoelacanthServer.pdb

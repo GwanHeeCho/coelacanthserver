@@ -20,6 +20,7 @@ namespace CoelacanthServer
         public static List<User> UserList = new List<User>();
         public static Random randomRoomNumber = new Random();
         public static ManualResetEvent allDone = new ManualResetEvent(false);
+        public static string systemTime = DateTime.Now.ToString("[yyyy-MM-dd HH:mm:ss]");
         public Server(int port)
         {   // 127.0.0.1 -p 2020
             // 1. 유저 초기화
@@ -50,7 +51,7 @@ namespace CoelacanthServer
                 // 4인 게임이라서 4개까지 제한을 두고, 룸 제작되면 천천히 증가시킬 예정
                 listener.Bind(localEndPoint);
                 listener.Listen(4);
-                Console.WriteLine("클라이언트 접속 대기중····");
+                Console.WriteLine(systemTime + " : " + "「Coelacanth Server Online」");
 
                 while (true)
                 {
@@ -78,6 +79,16 @@ namespace CoelacanthServer
             handler.SendBufferSize = 81920;
             handler.ReceiveBufferSize = 81920;
             UserList.Add(new User(handler));
+        }
+
+        public static void Read(string value)
+        {
+            Console.WriteLine(value);
+        }
+
+        public static void Wrtie(string value)
+        {
+            Console.WriteLine(value);
         }
     }
 }
