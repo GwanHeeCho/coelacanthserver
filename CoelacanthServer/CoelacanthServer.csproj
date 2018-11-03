@@ -53,6 +53,7 @@
     <Compile Include="StartListening.cs" />
     <Compile Include="Error.cs" />
     <Compile Include="ReceivePacket.cs" />
+    <Compile Include="UserPrivateData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -85,10 +85,5 @@ namespace CoelacanthServer
         {
             Console.WriteLine(value);
         }
-
-        public static void Wrtie(string value)
-        {
-            Console.WriteLine(value);
-        }
     }
 }
