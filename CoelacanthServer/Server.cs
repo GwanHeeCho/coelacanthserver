@@ -19,6 +19,8 @@ namespace CoelacanthServer
         // 3. 클라이언트들에게 패킷을 전송할 멀티캐스트 서버 생성
         public static List<User> UserList = new List<User>();
         public static Random randomRoomNumber = new Random();
+        // Thread / ThreadPool
+        // https://gist.github.com/lisysolution/4dfbaddd239c99ccf710bd45c014fb9e
         public static ManualResetEvent allDone = new ManualResetEvent(false);
         public static string systemTime = DateTime.Now.ToString("[yyyy-MM-dd HH:mm:ss]");
         public Server(int port)

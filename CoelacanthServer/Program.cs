@@ -19,7 +19,7 @@ namespace CoelacanthServer
 
             Thread udp;
             udp = new Thread(new ThreadStart(udpServer));
-            udp.Start();
+            //udp.Start();
 
             while (true)
             {

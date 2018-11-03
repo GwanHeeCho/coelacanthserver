@@ -12,22 +12,24 @@ namespace CoelacanthServer
          * 2. 정보 조회에 필요한 데이터 지정 (DB 추가되면, 따로 가져올 예정)
          * 3. 호스트와 게스트 구분 지정
         --------------------------------------------- */
-        //string time = DateTime.Now.ToString("[yyyy-MM-dd HH:mm:ss]");
-
         string nickname;
         int id;
         bool ready;
         string weapon;
-        string privateRoomCode;
 
         UserData data = new UserData(); // 소켓, 버퍼, 데이터 길이 등을 저장할 클래스 변수를 생성한다.
+        UserPrivateData member = new UserPrivateData();
         User hostUser = null;        
         User[] guestUser = new User[3];
         List<User> Room = new List<User>();
 
-        bool _ready = false;
-        bool _start = false;
-        int max = 0;
+        int index = 0;
+        private static string _privatekey;
+        public static string RoomPrivateKey
+        {
+            get { return _privatekey; }
+            set { _privatekey = value; }
+        }
 
         UdpClient udp = new UdpClient();
         IPEndPoint multicastEP = new IPEndPoint(IPAddress.Parse("229.1.1.229"), 12900);
@@ -119,12 +121,13 @@ namespace CoelacanthServer
         {
             string msg = Encoding.UTF8.GetString(data.buffer, 2, length - 2);
             string[] text = msg.Split(':');
-            Console.WriteLine(Server.systemTime + " Receive = " + msg);
+            Console.WriteLine(Server.systemTime + " 받음 = " + msg);
 
             if (text[0].Equals("CONNECT"))
             {
                 Console.WriteLine("[ :: 현재 접속중인 인원 : " + Server.UserList.Count + " :: ]");
-                max = Convert.ToInt32(Server.UserList.Count);
+                index = Convert.ToInt32(Server.UserList.Count);
+                Console.WriteLine("1" + Server.UserList.Count);
                 if (Server.UserList.Count % 4 == 1)
                 {
                     for (int i = 0; i < Server.UserList.Count; i++)
@@ -138,28 +141,35 @@ namespace CoelacanthServer
                     if (Room.Count <= 0)
                     {
                         Console.WriteLine(Server.systemTime + " 호스트유저 지정 : 룸 생성");
+                        RoomPrivateKey = PrivateCharKey(Server.randomRoomNumber, 20);
                         hostUser = this;
                         guestUser = null;
                     }
-                    hostUser.nickname = text[1];
-                    hostUser.id = int.Parse(text[2]);
-                    hostUser.ready = false;
-                    hostUser.weapon = null;
-                    var RoomID = PrivateCharKey(Server.randomRoomNumber, 20);
-                    privateRoomCode = RoomID;
-                    WriteLine(string.Format("CREATEROOM:{0}:{1}:{2}:{3}", privateRoomCode, hostUser.nickname, hostUser.id, 0));
+                    hostUser.member.nickname = text[1];
+                    hostUser.member.id = int.Parse(text[2]);
+                    hostUser.member.x = 0;
+                    hostUser.member.z = 0;
+                    hostUser.member.rotate = 0;
+                    hostUser.member.room = RoomPrivateKey;
+                    hostUser.member.ready = false;
+                    Console.WriteLine(hostUser.member);
+                    Console.WriteLine(Server.UserList.Count);
+                    WriteLine(string.Format("CREATEROOM:{0}:{1}:{2}", hostUser.nickname, hostUser.id, RoomPrivateKey));
                 }
-                //nickname = text[1];
+                else
+                {
+                    Console.WriteLine("TEST");
+                }
             }
             else if (text[0].Equals("READY")) // 클라이언트가 GUEST나 HOST 패킷을 받고 READY를 송신한 경우
             {
-                _ready = true;
+                //bool _ready = true;
 
-                if (hostUser != null && guestUser != null) // 호스트와 게스트가 모두 있는 경우면
-                {
-                    if (hostUser._ready && guestUser[0]._ready) // 임시 2인용 테스트
-                    {
-                        hostUser._start = true;
+                //if (hostUser != null && guestUser != null) // 호스트와 게스트가 모두 있는 경우면
+                //{
+                //    if (hostUser._ready && guestUser[0]._ready) // 임시 2인용 테스트
+                //    {
+                //        hostUser._start = true;
                         // 1. 캐릭터 4종류 중 한가지 할당
                         // 2. 맵 랜덤 할당 (호스트와 게스트 매칭)
                         // 3-1. 게스트의 캐릭터를 호스트와 다르게 설정
@@ -171,34 +181,51 @@ namespace CoelacanthServer
                         //hostUser.WriteLine(string.Format("GAMESTART:{0}", characterNumber));
                         //guestUser[Convert.ToInt32(text[1])].WriteLine(string.Format("GAMESTART{0}", characterNumber));
 
-                        Console.WriteLine("game start");
-                    }
-                }
+                //        Console.WriteLine("game start");
+                //    }
+                //}
             }
             else if (text[0].Equals("START"))
             {
                 
             }
+            else if (text[0].Equals("BTNSTART"))
+            {
+                Console.WriteLine("들어오긴하니?");
+                int max = 4;
+                int create = (max - Server.UserList.Count);
+                Console.WriteLine(create);
+                for (int i = 0; i < create; i++)
+                {
+                    Server.UserList.Add(new User(null));
+                    WriteLine(string.Format("BTNSTART:{0}", i));
+                }
+            }
             else if (text[0].Equals("MOVE"))
             {
-                if (hostUser.nickname != null)
-                {
-                    if (Server.UserList.Count % 4 == 1)
-                    {
-                        int from = int.Parse(text[1]);
-                        int to = int.Parse(text[2]);
+                //if (hostUser.nickname != null)
+                //{
+                //    if (Server.UserList.Count % 4 == 1)
+                //    {
+                //        int from = int.Parse(text[1]);
+                //        int to = int.Parse(text[2]);
 
-                        hostUser.WriteLine(string.Format("MOVE:{0}:{1}", from, to));
-                        for (int i = 0; i < Server.UserList.Count; i++)
-                            guestUser[i].WriteLine(string.Format("MOVE:{0}:{1}", from, to));
+                //        hostUser.WriteLine(string.Format("MOVE:{0}:{1}", from, to));
+                //        for (int i = 0; i < Server.UserList.Count; i++)
+                //            guestUser[i].WriteLine(string.Format("MOVE:{0}:{1}", from, to));
 
-                        Console.WriteLine(string.Format("{0} moved player {1} to {2}", nickname, from, to));
-                    }
-                    else
-                    {
-                        Console.WriteLine("예외처리 " + nickname);
-                    }
-                }
+                //        Console.WriteLine(string.Format("{0} moved player {1} to {2}", nickname, from, to));
+                //    }
+                //    else
+                //    {
+                //        Console.WriteLine("예외처리 " + nickname);
+                //    }
+                //}
+            }
+            else if(text[0].Equals("ROTATE"))
+            {
+                //UserPrivateData.Rotate = float.Parse(text[3]);
+                //WriteLine(string.Format("ROTATE:{0}", UserPrivateData.Rotate));
             }
             else if(text[0].Equals("RECOVERY"))
             {
@@ -214,9 +241,9 @@ namespace CoelacanthServer
                 hostUser.WriteLine(string.Format("POSITION:{0}:{1}:{2}", x, y, z));
                 //dgram = Encoding.ASCII.GetBytes(text[1]);
                 //byte[] bStrByte = Encoding.UTF8.GetBytes(str0);
-                // string str1 = Encoding.Default.GetString(bStrByte); // byte -> string
+                //string str1 = Encoding.Default.GetString(bStrByte); // byte -> string
 
-                //.Send(dgram, dgram.Length, multicastEP);
+                //Send(dgram, dgram.Length, multicastEP);
                 //byte[] _position = Encoding.UTF8.GetBytes(text[1]);
 
                 //MulticastWrite(string.Format("POSITION:{0}", text[1]));
@@ -272,7 +299,7 @@ namespace CoelacanthServer
             byte[] buff = new byte[4096];
             Buffer.BlockCopy(ShortToByte(Encoding.UTF8.GetBytes(text).Length + 2), 0, buff, 0, 2);
             Buffer.BlockCopy(Encoding.UTF8.GetBytes(text), 0, buff, 2, Encoding.UTF8.GetBytes(text).Length);
-            Console.WriteLine(Server.systemTime + " Send = " + text);
+            Console.WriteLine(Server.systemTime + " 받음 = " + text);
             data.workSocket.Send(buff, Encoding.UTF8.GetBytes(text).Length + 2, 0);
             /*
             for (int i = Server.UserList.Count - 1; i >= 0; i--)

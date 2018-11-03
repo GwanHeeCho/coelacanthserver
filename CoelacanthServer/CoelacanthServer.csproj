@@ -49,6 +49,7 @@
     <Compile Include="Server.cs" />
     <Compile Include="User.cs" />
     <Compile Include="UserData.cs" />
+    <Compile Include="UserIdentification.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="StartListening.cs" />
     <Compile Include="Error.cs" />
