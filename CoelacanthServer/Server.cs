@@ -19,6 +19,27 @@ namespace CoelacanthServer
         // 3. 클라이언트들에게 패킷을 전송할 멀티캐스트 서버 생성
         public static List<User> UserList = new List<User>();
         public static Random randomRoomNumber = new Random();
+        private static string _privatekey;
+        public static string RoomPrivateKey
+        {
+            get { return _privatekey; }
+            set { _privatekey = value; }
+        }
+
+        private static int _roomCount;
+        public static int RoomCount
+        {
+            get { return _roomCount; }
+            set { _roomCount = value; }
+        }
+
+        private static int _hostID;
+        public static int HostID
+        {
+            get { return _hostID; }
+            set { _hostID = value; }
+        }
+
         // Thread / ThreadPool
         // https://gist.github.com/lisysolution/4dfbaddd239c99ccf710bd45c014fb9e
         public static ManualResetEvent allDone = new ManualResetEvent(false);
@@ -33,6 +54,7 @@ namespace CoelacanthServer
 
         public static void DeleteUser(User temp)
         {
+            Console.WriteLine(Server.RoomCount);
             UserList.Remove(temp);
         }
 
