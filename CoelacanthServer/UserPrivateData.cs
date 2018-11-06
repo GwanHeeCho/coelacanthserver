@@ -1,7 +1,7 @@
 ﻿using System;
 namespace CoelacanthServer
 {
-    public class UserPrivateData
+    class UserPrivateData
     {
         public int id;
         public string nickname;
