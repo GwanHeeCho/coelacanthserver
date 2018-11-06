@@ -20,7 +20,7 @@ namespace CoelacanthServer
         public static List<User> UserList = new List<User>();
         //public static List<UserPrivateData> UserData = new List<UserPrivateData>();
         public static Random randomRoomNumber = new Random();
-        public static Random Rand = new Random();
+        public readonly static int RoomUserMaximum = 4;
         private static string _privatekey;
         public static string RoomPrivateKey
         {
@@ -28,10 +28,17 @@ namespace CoelacanthServer
             set { _privatekey = value; }
         }
 
+        private static int _roomCount;
+        public static int RoomCount
+        {
+            get { return _roomCount; }
+            set { _roomCount = value; }
+        }
+
         // Thread / ThreadPool
         // https://gist.github.com/lisysolution/4dfbaddd239c99ccf710bd45c014fb9e
         public static ManualResetEvent allDone = new ManualResetEvent(false);
-        public static string systemTime = DateTime.Now.ToString("[yyyy-MM-dd HH:mm:ss]");
+        public static string systemTime = DateTime.Now.ToString("[yyyy-MM-dd HH:mm:ss] ");
         public Server(int port)
         {   // 127.0.0.1 -p 2020
             // 1. 유저 초기화
