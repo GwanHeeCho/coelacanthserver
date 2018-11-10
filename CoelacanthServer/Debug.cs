@@ -6,31 +6,38 @@ using System.Threading.Tasks;
 
 namespace CoelacanthServer
 {
-    public static class Debug
+    public class Debug
     {
+        private static int _count;
+        public static int Count
+        {
+            get { return _count; }
+            set { _count = value; }
+        }
+        
         public static void Log(string value)
         {
-            Console.WriteLine(Server.systemTime + value);
+            Console.WriteLine(value);
         }
 
-        public static void Log(short value)
+        public static  void Log(short value)
         {
-            Console.WriteLine(Server.systemTime + value);
+            Console.WriteLine(value);
         }
 
         public static void Log(int value)
         {
-            Console.WriteLine(Server.systemTime + value);
+            Console.WriteLine(value);
         }
 
         public static void Log(float value)
         {
-            Console.WriteLine(Server.systemTime + value);
+            Console.WriteLine(value);
         }
 
         public static void Log(double value)
         {
-            Console.WriteLine(Server.systemTime + value);
+            Console.WriteLine(value);
         }
     }
 }
