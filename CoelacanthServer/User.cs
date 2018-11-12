@@ -105,21 +105,7 @@ namespace CoelacanthServer
             return PrivateCharKey(_random, _length, charPool);
         }
 
-        //private static User PlayerStat(User user, string nick, int id, int sequence, float x, float z, float rotate, string room, bool ready)
-        //{
-        //    user.member.nickname = nick;
-        //    user.member.id = id;
-        //    user.member.sequence = sequence;
-        //    user.member.x = x;
-        //    user.member.z = z;
-        //    user.member.rotate = rotate;
-        //    user.member.room = room;
-        //    user.member.ready = ready;
-        //    PlayerStat(user);
-        //    return user;
-        //}
-
-        private void PlayerStat(string nick, int id, int sequence, float x, float z, float rotate, string room, bool ready)
+        private void PlayerStat(string nick, int id, int sequence, float x, float z, float rotate, string room, bool ready, bool host)
         {
             this.member.nickname = nick;
             this.member.id = id;
@@ -129,11 +115,13 @@ namespace CoelacanthServer
             this.member.rotate = rotate;
             this.member.room = room;
             this.member.ready = ready;
+            this.member.host = host;
             PlayerStat(this);
         }
 
         private static void PlayerStat(User user)
         {
+            Console.WriteLine("===================");
             Console.WriteLine("닉네임 : " + user.member.nickname);
             Console.WriteLine("아이디 : " + user.member.id);
             Console.WriteLine("순번 : " + user.member.sequence);
@@ -142,6 +130,7 @@ namespace CoelacanthServer
             Console.WriteLine("회전값 : " + user.member.rotate);
             Console.WriteLine("룸코드 : " + user.member.room);
             Console.WriteLine("준비상태 : " + user.member.ready);
+            Console.WriteLine("===================");
         }
 
         // 개설 된 룸 정보 찾기
@@ -153,18 +142,15 @@ namespace CoelacanthServer
                 if (Server.UserList[i] != this)
                 {
                     // 개설 된 방 확인
-                    if (Server.UserList[i].hostUser != null)
+                    if (Server.UserList[i].hostUser != null && Server.UserList[i].thirdUser == null)
                     {
-                        if (Server.UserList[i].firstUser == null || Server.UserList[i].secondUser == null)
-                            if (Server.UserList[i].secondUser == null || Server.UserList[i].thirdUser == null)
-                                Room.Add(Server.UserList[i]);   // 입장 가능한 방 리스트 추가
+                        Room.Add(Server.UserList[i]);   // 입장 가능한 방 리스트 추가
                     }
-                    // 풀방
-                    else if (Server.UserList[i].thirdUser != null) { }
                     // 버그
                     else { }
                 }
             }
+            Debug.Log("OPEN ROOM : " + Room.Count);
         }
 
         // 룸 생성
@@ -174,43 +160,57 @@ namespace CoelacanthServer
             firstUser = null;
             secondUser = null;
             thirdUser = null;
-            PlayerStat(nickname, id, sequence, 0, 0, 0, room, false);
+            PlayerStat(nickname, id, sequence, 0, 0, 0, room, false, true);
             WriteLine(string.Format("INITIALIZE:{0}:{1}:{2}:{3}", sequence, nickname, id, room));
         }
 
         // 룸 랜덤 입장
         private void JoinAvailableRoom(User my, string nickname, int id, int sequence)
         {
-            // host에 hostUser의 정보가 있는 User 클래스 정보를 넣는다.
-            User host = Room[Server.randomRoomNumber.Next(Room.Count)];
-            PlayerStat(nickname, id, sequence, 0, 0, 0,  host.member.room, false);
+            Debug.Log("유저정보 : " + nickname + ":" + id);
+            if (hostUser == null)
+            {
+                // host에 hostUser의 정보가 있는 User 클래스 정보를 넣는다.
+                User host = Room[Server.randomRoomNumber.Next(Room.Count)];
+                hostUser = host.hostUser;
+                PlayerStat(nickname, id, sequence, 0, 0, 0, host.member.room, false, false);
 
-            JoinToGuest(my, host, sequence);
-            PlayerStat(host);
+                JoinToGuest(my, host, sequence);
+            }
+            else
+            {
+            }
             WriteLine(string.Format("INITIALIZE:{0}:{1}:{2}:{3}", member.sequence, member.nickname, member.id, member.room));
         }
 
-        // 게스트 순서 할당
+        // 게스트 순서 할당 (폴리싱)
         private int GuestSequence(User first, User second, User thrid)
         {
+            // 정상적인 값이 나오지 않음
             return (first == null) ? 2 : (second == null ? 3 : 4);
         }
 
         // 게스트 유저 추가
         private void JoinToGuest(User my, User host, int number)
         {
-            Debug.Log( + number + " 번째 유저");
             // Max Connecting 4인 기준 개발 (G-STAR 대용)
-            switch (number)
+            if (my.hostUser.member.id == host.hostUser.member.id)
             {
-                case 2:
-                    break;
-                case 3:
-                    break;
-                case 4:
-                    break;
-                default:
-                    break;
+                switch (number)
+                {
+                    case 2:
+                        host.firstUser = my;
+                        break;
+                    case 3:
+                        host.secondUser = my;
+                        break;
+                    case 4:
+                        host.thirdUser = my;
+                        host.hostUser.WriteLine(string.Format("FULL:{0}", host.hostUser.member.room));
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
@@ -299,6 +299,20 @@ namespace CoelacanthServer
                 }
                 // 4. 룸 안의 유저들의 데이터 가져오기
                 //ConveyInformationUser();
+            }
+            else if (text[0].Equals("FULL"))
+            {
+                Debug.Log("호스트 : " + text[1] + ":" + text[2]);
+                Debug.Log("ROOM : " + text[3]);
+                OpenRoomSearch();
+                Debug.Log("OPEN ROOM : " + Room.Count);
+                for (int i = 0; i < Room.Count; i++)
+                {
+                    if (text[3] == Room[i].hostUser.member.room)
+                    {
+                        Debug.Log("룸이 같다!");
+                    }
+                }
             }
             else if (text[0].Equals("CREATEROOM"))
             {
@@ -495,6 +509,7 @@ namespace CoelacanthServer
 
         public void WriteLine(string text)
         {
+            Debug.Count++;
             // 호스트 종료 시에도 서버가 돌아가야 함
             // 룸 3개 기준, 12인 플레이를 위해 호스트를 받을 서버임으로 꺼지지 않게 설정
             string systemTime = DateTime.Now.ToString(". [yyyy-MM-dd HH:mm:ss] ");

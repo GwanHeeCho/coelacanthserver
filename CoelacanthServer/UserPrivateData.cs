@@ -12,5 +12,6 @@ namespace CoelacanthServer
         public float rotate;
         public bool ready;
         public int sequence;
+        public bool host;
     }
 }
