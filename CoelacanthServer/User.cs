@@ -281,7 +281,7 @@ namespace CoelacanthServer
             string[] text = msg.Split(':');
             string log = Debug.Count + ". " + systemTime + " 수신 = " + msg;
     
-            LogManager.Instance.logText(log);
+            LogManager.logText(log);
             Debug.Log(log);
             
             if (text[0].Equals("CONNECT"))
