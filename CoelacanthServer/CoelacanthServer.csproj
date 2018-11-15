@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Debug.cs" />
     <Compile Include="ItemboxManager.cs" />
+    <Compile Include="LogManager.cs" />
     <Compile Include="MulticastServer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
