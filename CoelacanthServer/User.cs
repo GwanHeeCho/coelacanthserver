@@ -142,12 +142,14 @@ namespace CoelacanthServer
                 if (Server.UserList[i] != this)
                 {
                     // 개설 된 방 확인
-                    if (Server.UserList[i].hostUser != null && Server.UserList[i].thirdUser == null)
+                    if (Server.UserList[i].member.host == true)
                     {
-                        Room.Add(Server.UserList[i]);   // 입장 가능한 방 리스트 추가
+                        // 4인 모두 나오게 될거임 hostUser에 host.hostUser를 넣어서 무조건 true 성립됨
+                        // 호스트 유저의 룸 정보와 조회하려는 유저의 룸 정보를 비교해서 찾아내는 함수 구현해두기
+                        
+                        // 방 목록에 추가
+                        Room.Add(Server.UserList[i]);
                     }
-                    // 버그
-                    else { }
                 }
             }
             Debug.Log("OPEN ROOM : " + Room.Count);
@@ -160,7 +162,7 @@ namespace CoelacanthServer
             firstUser = null;
             secondUser = null;
             thirdUser = null;
-            PlayerStat(nickname, id, sequence, 0, 0, 0, room, false, true);
+            hostUser.PlayerStat(nickname, id, sequence, 0, 0, 0, room, false, true);
             WriteLine(string.Format("INITIALIZE:{0}:{1}:{2}:{3}", sequence, nickname, id, room));
         }
 
@@ -274,11 +276,14 @@ namespace CoelacanthServer
         private void ParsePacket(int length)
         {
             Debug.Count++;
-            string systemTime = DateTime.Now.ToString(". [yyyy-MM-dd HH:mm:ss] ");
+            string systemTime = DateTime.Now.ToString("[yyyy-MM-dd HH:mm:ss]");
             string msg = Encoding.UTF8.GetString(data.buffer, 2, length - 2);
             string[] text = msg.Split(':');
-            Debug.Log(Debug.Count + systemTime + "수신 = " + msg);
-            //
+            string log = Debug.Count + ". " + systemTime + " 수신 = " + msg;
+    
+            LogManager.logText(log);
+            Debug.Log(log);
+            
             if (text[0].Equals("CONNECT"))
             {
                 Console.WriteLine("[ :: Total online user : " + Server.UserList.Count + " :: ]");
@@ -328,7 +333,7 @@ namespace CoelacanthServer
                     if (this.member.id == int.Parse(text[2]))
                         if (this.member.room == text[3])
                             this.member.ready = Convert.ToBoolean(text[4]);
-                Debug.Log(this.member.nickname + ", " + this.member.id + ", " + this.member.score);
+                Debug.Log(this.member.nickname + ", " + this.member.id + ", " + this.member.ready);
                 //// 호스트에 내꺼를 동기화한다
                 //for (int i = 0; i < Room.Count; i++)
                 //{
@@ -372,9 +377,13 @@ namespace CoelacanthServer
             else if (text[0].Equals("START"))
             {
                 Debug.Log(text[1] + ":" + text[2]);
+                
             }
             else if (text[0].Equals("BTNSTART"))
             {
+                // 호스트의 닉네임 아이디 룸정보 가져옴
+                // 
+                
                 /*
                 Console.WriteLine("들어오긴하니?");
                 int max = 4;
