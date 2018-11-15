@@ -322,30 +322,31 @@ namespace CoelacanthServer
             }
             else if (text[0].Equals("READY")) // 클라이언트가 GUEST나 HOST 패킷을 받고 READY를 송신한 경우
             {
+                Debug.Log("PLAYER READY");
                 // 레디를 내꺼에 넣는다
-                this.member.nickname = text[1];
-                this.member.id = int.Parse(text[2]);
-                this.member.score = int.Parse(text[3]);
+                if (this.member.nickname == text[1])
+                    if (this.member.id == int.Parse(text[2]))
+                        if (this.member.room == text[3])
+                            this.member.ready = Convert.ToBoolean(text[4]);
                 Debug.Log(this.member.nickname + ", " + this.member.id + ", " + this.member.score);
-                Debug.Log("레디 : " + text[1] + ":" + text[2]);
-                // 호스트에 내꺼를 동기화한다
-                for (int i = 0; i < Room.Count; i++)
-                {
-                    // 개설 된 방의 호스트 유저와 내가 참여한 방의 PK값이 같을 경우
-                    if (Room[i].hostUser.member.room == hostUser.member.room)
-                    {
-                        Debug.Log("찾았다" + hostUser.hostUser.member.room);
-                        // 모든 유저를 호스트에 맞춰 동기화한다
-                        hostUser.WriteLine(string.Format("SROCE:{0}:{1}:{2}", this.member.nickname, this.member.id, this.member.score));
-                        firstUser.WriteLine(string.Format("SROCE:{0}:{1}:{2}", this.member.nickname, this.member.id, this.member.score));
-                        secondUser.WriteLine(string.Format("SROCE:{0}:{1}:{2}", this.member.nickname, this.member.id, this.member.score));
-                        thirdUser.WriteLine(string.Format("SROCE:{0}:{1}:{2}", this.member.nickname, this.member.id, this.member.score));
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
+                //// 호스트에 내꺼를 동기화한다
+                //for (int i = 0; i < Room.Count; i++)
+                //{
+                //    // 개설 된 방의 호스트 유저와 내가 참여한 방의 PK값이 같을 경우
+                //    if (Room[i].hostUser.member.room == hostUser.member.room)
+                //    {
+                //        Debug.Log("찾았다" + hostUser.hostUser.member.room);
+                //        // 모든 유저를 호스트에 맞춰 동기화한다
+                //        hostUser.WriteLine(string.Format("SROCE:{0}:{1}:{2}", this.member.nickname, this.member.id, this.member.score));
+                //        firstUser.WriteLine(string.Format("SROCE:{0}:{1}:{2}", this.member.nickname, this.member.id, this.member.score));
+                //        secondUser.WriteLine(string.Format("SROCE:{0}:{1}:{2}", this.member.nickname, this.member.id, this.member.score));
+                //        thirdUser.WriteLine(string.Format("SROCE:{0}:{1}:{2}", this.member.nickname, this.member.id, this.member.score));
+                //    }
+                //    else
+                //    {
+                //        break;
+                //    }
+                //}
                 //bool _ready = true;
 
                 //if (hostUser != null && guestUser != null) // 호스트와 게스트가 모두 있는 경우면
@@ -370,7 +371,7 @@ namespace CoelacanthServer
             }
             else if (text[0].Equals("START"))
             {
-                
+                Debug.Log(text[1] + ":" + text[2]);
             }
             else if (text[0].Equals("BTNSTART"))
             {
@@ -415,28 +416,9 @@ namespace CoelacanthServer
             else if(text[0].Equals("SCORE"))
             {
                 // 점수를 내꺼에 넣는다
-                this.member.nickname = text[1];
-                this.member.id = int.Parse(text[2]);
                 this.member.score = int.Parse(text[3]);
                 Debug.Log(this.member.nickname + ", " + this.member.id + ", " + this.member.score);
                 // 호스트에 내꺼를 동기화한다
-                for (int i = 0; i < Room.Count; i++)
-                {
-                    // 개설 된 방의 호스트 유저와 내가 참여한 방의 PK값이 같을 경우
-                    if (Room[i].hostUser.member.room == hostUser.member.room)
-                    {
-                        Debug.Log("찾았다" + hostUser.hostUser.member.room);
-                        // 모든 유저를 호스트에 맞춰 동기화한다
-                        hostUser.WriteLine(string.Format("SROCE:{0}:{1}:{2}", this.member.nickname, this.member.id, this.member.score));
-                        firstUser.WriteLine(string.Format("SROCE:{0}:{1}:{2}", this.member.nickname, this.member.id, this.member.score));
-                        secondUser.WriteLine(string.Format("SROCE:{0}:{1}:{2}", this.member.nickname, this.member.id, this.member.score));
-                        thirdUser.WriteLine(string.Format("SROCE:{0}:{1}:{2}", this.member.nickname, this.member.id, this.member.score));
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
             }
             else if(text[0].Equals("RECOVERY"))
             {
