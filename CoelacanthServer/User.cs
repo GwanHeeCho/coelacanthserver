@@ -141,12 +141,7 @@ namespace CoelacanthServer
             {
                 if (Server.UserList[i] != this)
                 {
-<<<<<<< HEAD
                     if (Server.UserList[i].hostUser != null && Server.UserList[i].thirdUser == null)
-=======
-                    // 개설 된 방 확인
-                    if (Server.UserList[i].member.host == true)
->>>>>>> 9ecb2a80823676152cbd710b819efdf29a32a8fe
                     {
                         // 4인 모두 나오게 될거임 hostUser에 host.hostUser를 넣어서 무조건 true 성립됨
                         // 호스트 유저의 룸 정보와 조회하려는 유저의 룸 정보를 비교해서 찾아내는 함수 구현해두기
@@ -166,11 +161,8 @@ namespace CoelacanthServer
             firstUser = null;
             secondUser = null;
             thirdUser = null;
-<<<<<<< HEAD
             PlayerStat(nickname, id, sequence, 0, 0, 0, room, false, true);
-=======
-            hostUser.PlayerStat(nickname, id, sequence, 0, 0, 0, room, false, true);
->>>>>>> 9ecb2a80823676152cbd710b819efdf29a32a8fe
+            //hostUser.PlayerStat(nickname, id, sequence, 0, 0, 0, room, false, true);
             WriteLine(string.Format("INITIALIZE:{0}:{1}:{2}:{3}", sequence, nickname, id, room));
         }
 
@@ -288,11 +280,6 @@ namespace CoelacanthServer
             string msg = Encoding.UTF8.GetString(data.buffer, 2, length - 2);
             string[] text = msg.Split(':');
             string log = Debug.Count + ". " + systemTime + " 수신 = " + msg;
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> 9ecb2a80823676152cbd710b819efdf29a32a8fe
             LogManager.logText(log);
             Debug.Log(log);
             
