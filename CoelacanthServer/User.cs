@@ -87,7 +87,7 @@ namespace CoelacanthServer
             catch (Exception)
             {
                 Server.DeleteUser(this);
-                Console.WriteLine("[ :: 현재 접속중인 인원 : " + Server.UserList.Count + " :: ]");
+                Console.WriteLine("Packetless for error");
             }
         }
 
@@ -280,7 +280,7 @@ namespace CoelacanthServer
             string msg = Encoding.UTF8.GetString(data.buffer, 2, length - 2);
             string[] text = msg.Split(':');
             string log = Debug.Count + ". " + systemTime + " 수신 = " + msg;
-            LogManager.logText(log);
+            //LogManager.logText(log);
             Debug.Log(log);
             
             if (text[0].Equals("CONNECT"))
@@ -458,7 +458,6 @@ namespace CoelacanthServer
                     }
                     Server.DeleteUser(this);
                     Server.RoomCount--;
-                    LogManager.sw.Close();
                     data.workSocket.Shutdown(SocketShutdown.Both);
                     data.workSocket.Close();
                 }

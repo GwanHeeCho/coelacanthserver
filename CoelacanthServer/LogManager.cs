@@ -10,7 +10,16 @@ namespace CoelacanthServer
 
         public static void logText(string _text)
         {
-            sw.WriteLine(_text);
+            try
+            {
+                sw.WriteLine(_text);
+            }
+            catch (Exception ex)
+            {
+                sw.Close();
+                Console.WriteLine(ex.ToString());
+            }
+            
         }
     }
 }
