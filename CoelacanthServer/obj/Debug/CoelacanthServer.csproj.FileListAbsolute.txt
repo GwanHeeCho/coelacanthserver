@@ -28,13 +28,6 @@ D:/Project Files/CoelacanthServer/CoelacanthServer/bin/Debug/CoelacanthServer.pd
 D:/Project Files/CoelacanthServer/CoelacanthServer/obj/Debug/CoelacanthServer.csprojResolveAssemblyReference.cache
 D:/Project Files/CoelacanthServer/CoelacanthServer/obj/Debug/CoelacanthServer.exe
 D:/Project Files/CoelacanthServer/CoelacanthServer/obj/Debug/CoelacanthServer.pdb
-D:/Program Files/Develop/CoelacanthServer/CoelacanthServer/obj/Debug/CoelacanthServer.csprojAssemblyReference.cache
-D:/Program Files/Develop/CoelacanthServer/CoelacanthServer/obj/Debug/CoelacanthServer.csproj.CoreCompileInputs.cache
-D:/Program Files/Develop/CoelacanthServer/CoelacanthServer/obj/Debug/CoelacanthServer.exe
-D:/Program Files/Develop/CoelacanthServer/CoelacanthServer/obj/Debug/CoelacanthServer.pdb
-D:/Program Files/Develop/CoelacanthServer/CoelacanthServer/bin/Debug/CoelacanthServer.exe.config
-D:/Program Files/Develop/CoelacanthServer/CoelacanthServer/bin/Debug/CoelacanthServer.exe
-D:/Program Files/Develop/CoelacanthServer/CoelacanthServer/bin/Debug/CoelacanthServer.pdb
 /Users/hanga/Documents/Develop/CoelacanthServer/CoelacanthServer/bin/Debug/CoelacanthServer.exe.config
 /Users/hanga/Documents/Develop/CoelacanthServer/CoelacanthServer/bin/Debug/CoelacanthServer.exe
 /Users/hanga/Documents/Develop/CoelacanthServer/CoelacanthServer/bin/Debug/CoelacanthServer.pdb
@@ -48,3 +41,10 @@ C:\Users\user\Documents\Develop\CoelacanthServer\CoelacanthServer\bin\Debug\Coel
 C:\Users\user\Documents\Develop\CoelacanthServer\CoelacanthServer\obj\Debug\CoelacanthServer.exe
 C:\Users\user\Documents\Develop\CoelacanthServer\CoelacanthServer\obj\Debug\CoelacanthServer.pdb
 C:\Users\user\Documents\Develop\CoelacanthServer\CoelacanthServer\obj\Debug\CoelacanthServer.csprojResolveAssemblyReference.cache
+D:\Program Files\Develop\CoelacanthServer\CoelacanthServer\bin\Debug\CoelacanthServer.exe.config
+D:\Program Files\Develop\CoelacanthServer\CoelacanthServer\bin\Debug\CoelacanthServer.exe
+D:\Program Files\Develop\CoelacanthServer\CoelacanthServer\bin\Debug\CoelacanthServer.pdb
+D:\Program Files\Develop\CoelacanthServer\CoelacanthServer\obj\Debug\CoelacanthServer.csproj.CoreCompileInputs.cache
+D:\Program Files\Develop\CoelacanthServer\CoelacanthServer\obj\Debug\CoelacanthServer.exe
+D:\Program Files\Develop\CoelacanthServer\CoelacanthServer\obj\Debug\CoelacanthServer.pdb
+D:\Program Files\Develop\CoelacanthServer\CoelacanthServer\obj\Debug\CoelacanthServer.csprojAssemblyReference.cache

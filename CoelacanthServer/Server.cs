@@ -38,7 +38,6 @@ namespace CoelacanthServer
         // Thread / ThreadPool
         // https://gist.github.com/lisysolution/4dfbaddd239c99ccf710bd45c014fb9e
         public static ManualResetEvent allDone = new ManualResetEvent(false);
-        public static string systemTime = DateTime.Now.ToString("[yyyy-MM-dd HH:mm:ss] ");
         public Server(int port)
         {   // 127.0.0.1 -p 2020
             // 1. 유저 초기화
@@ -69,7 +68,7 @@ namespace CoelacanthServer
                 // 4인 게임이라서 4개까지 제한을 두고, 룸 제작되면 천천히 증가시킬 예정
                 listener.Bind(localEndPoint);
                 listener.Listen(4);
-                Console.WriteLine(systemTime + " : " + "「Coelacanth Server Online」");
+                Console.WriteLine("「Coelacanth Server Online」");
 
                 while (true)
                 {

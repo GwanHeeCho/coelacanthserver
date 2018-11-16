@@ -36,7 +36,7 @@ namespace CoelacanthServer
         public static void udpServer()
         {
             // UDP 서버 접속
-            MulticastServer server = new MulticastServer(12900);
+            MulticastServer server = new MulticastServer(13000);
         }
     }
 }
