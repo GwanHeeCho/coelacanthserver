@@ -30,7 +30,7 @@ namespace CoelacanthServer
         public static void tcpServer()
         {
             // TCP 서버 접속
-            Server StartServer = new Server(12900); 
+            Server StartServer = new Server(12800); 
         }
 
         public static void udpServer()
